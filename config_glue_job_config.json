@@ -1,0 +1,18 @@
+{
+  "Name": "SnowflakeGluePipeline",
+  "Role": "arn:aws:iam::your-account:role/GlueRole",
+  "Command": {
+    "Name": "glueetl",
+    "ScriptLocation": "s3://your-bucket/scripts/glue_snowflake_pipeline.py",
+    "PythonVersion": "3"
+  },
+  "DefaultArguments": {
+    "--batch_date": "2025-01-01",
+    "--secret_id": "snowflake-credentials",
+    "--additional-python-modules": "pandas,pyarrow",
+    "--extra-jars": "s3://your-bucket/jars/snowflake-jdbc-3.13.14.jar,s3://your-bucket/jars/spark-snowflake_2.12-2.10.0-spark_3.1.jar,s3://your-bucket/jars/hadoop-aws-3.3.1.jar"
+  },
+  "GlueVersion": "3.0",
+  "WorkerType": "G.1X",
+  "NumberOfWorkers": 4
+}

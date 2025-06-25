@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+# Configuration
+S3_BUCKET="your-bucket"
+SCRIPT_PATH="src/glue_snowflake_pipeline.py"
+S3_SCRIPT_PATH="s3://$S3_BUCKET/scripts/glue_snowflake_pipeline.py"
+CONFIG_PATH="config/glue_job_config.json"
+
+# Upload script to S3
+echo "Uploading script to S3..."
+aws s3 cp $SCRIPT_PATH $S3_SCRIPT_PATH
+
+# Create or update Glue job
+echo "Deploying Glue job..."
+if aws glue get-job --job-name SnowflakeGluePipeline >/dev/null 2>&1; then
+  aws glue update-job --cli-input-json file://$CONFIG_PATH
+else
+  aws glue create-job --cli-input-json file://$CONFIG_PATH
+fi
+
+echo "Deployment completed successfully"
